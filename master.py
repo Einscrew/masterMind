@@ -16,8 +16,10 @@ class table:
 	roundNum=0
 	c=c()
 	key=0
+	colorKey=[]
 
 def gameInit():
+	os.system('clear')
 	print('MasterMind')
 	while table.roundNum < table.limit:
 
@@ -63,6 +65,6 @@ def genSeq():
 				lst+=[getColor(r-1)]
 				aux=0
 	return lst
-genSeq()
+table.colorKey=genSeq()
 gameInit()
-print(str(table.key))
+print(lstToStr(table.colorKey))
