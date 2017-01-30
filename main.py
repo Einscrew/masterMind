@@ -1,5 +1,6 @@
+import colorama
 
-
+colorama.init()
 class c:
 	colors=[[1,'blue','\033[44m'],[2,'green','\033[42m'],[3,'red','\033[41m'],[4,'yellow','\033[43m'],[5,'cyan','\033[48;5;202m'],[6,'purple','\033[48;5;199m'],[7,'gray','\033[48;5;8m'],[8,'white','\033[48;5;15m']]
 	END='\033[0m'
