@@ -39,7 +39,7 @@ def lstToStr(lst):
 def chooseSeq():
 	print(test())
 	inp=input('choose 4 colors sequece \tEx: [1,2,3,4]')
-	a,b,c,d=inp
+	a,b,c,d=str(inp)
 	lst=[]
 	for i in [a,b,c,d]:
 		lst+= getColor(int(i)-1)
