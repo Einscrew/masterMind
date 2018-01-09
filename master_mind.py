@@ -2,7 +2,7 @@
 
 from os import system as system
 
-CENTER = 24
+CENTER = 25
 N_CLRS = 4
 N_MAX_CLRS = 8
 BOARD = {
@@ -15,7 +15,7 @@ def getInput(allowed = set(range(1,9))):
 		try:
 			s = input('Select the colors by their number: ')
 			s = [int(n) for n in s]
-			if len(set(s)) == N_CLRS and len(s) == len(set(s)) and set(s).issubset(allowed): 
+			if len(s) == N_CLRS and set(s).issubset(allowed): 
 				return s
 		except ValueError:
 			pass
@@ -40,35 +40,32 @@ def printBoard(r={"right":-1,"placed":-1}):
 	n = r.get("right")
 	p = r.get("placed")
 	printElement('', f='+')
-	printElement('Master Mind'.upper(),c=' ', f='|')
-	printElement('', f='+')
-	printElement( getColorStr([str(x) for x in range(1,9)], 18, elem='n',sep =''), c=' ', f='|')
-	printElement('', f='+')
 	for i in BOARD.get("pins"):
 		printElement(i, c=' ', f='|')
 
 	printElement('', f='+')
-	result='Matched colors: '+ (str(n) if n != -1 else 'X')
-	printElement( result , c=' ', f='|')
-	result='Matched colors: '+ (str(p) if p != -1 else 'X')
-	printElement( result , c=' ', f='|')
+	result= ['Matched colors: ']
+	result.append(str(n) if n != -1 else 'X')
+	printElement( "".join(result) , c=' ', f='|')
+	result = ['In the right place: ']
+	result.append(str(p) if p != -1 else 'X')
+	printElement( "".join(result) , c=' ', f='|')
 	printElement('', f='+')
 
 
-def getColorStr(t,l=16, elem = '  ',sep='  ', r= ' ', p=' '):
-	f= '\033[{};5;{}m{}\033[0m'
-	r = f.format('1;38',7,r)
-	p = f.format('1;38',1,p)
-	s = sep
-	s = s.join([f.format('1;48',x,' '+str(x)) if elem =='n' else f.format('1;48',x,'  ')for x in t])
-	rhs=((CENTER-l)//2)+(0 if CENTER%2==0 else 1)
-	lhs= CENTER-l-rhs
-	s=r+" "*rhs+s+" "*lhs+p
+def getColorStr(t):
+	f= '\033[1;48;5;{}m{}\033[0m'
+	s = "  "
+	s = s.join([f.format(x,'  ') for x in t])
+	rhs=((CENTER-16)//2)+(1 if CENTER%2==0 else 2)
+	lhs= CENTER-16-rhs+2
+	s=" "*rhs+s+" "*lhs
 	return s
 
 
-def updateBoard(i, t, r):
-	BOARD["pins"][i]= getColorStr(t,16, r= str(r.get("right")), p=str(r.get("placed")))
+def updateBoard(i, t):
+	#BOARD["pins"][i]= "  ".join([ " "+str(c) for c in t])
+	BOARD["pins"][i]= getColorStr(t)
 
 
 def game():
@@ -80,14 +77,13 @@ def game():
 		t=getInput()
 		system('clear')
 		r=match(t,BOARD.get("key"))
-		updateBoard(iteration, t, r)
+		updateBoard(iteration, t)
 		printBoard(r=r)
 		if r["placed"] == N_CLRS:
 			break
 		iteration = iteration+1
 	else:
 		printElement("You lost!", c=' ',f='|')
-		printElement(getColorStr(BOARD["key"]), c=' ',f='|')
 		printElement('', c='-',f='+')
 		return
 	printElement("You won!", c=' ',f='|')
